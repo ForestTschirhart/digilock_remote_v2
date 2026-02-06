@@ -280,6 +280,7 @@ class ArduinoMonitor:
         self.short_mem_n_stdev = None
         self.short_mem_len = None
         self.pk_fnd_thr = None
+        self.dac_step = None
         
         self.query_params() # initializes params in group just above^
         
@@ -399,6 +400,7 @@ class ArduinoMonitor:
             self.short_mem_n_stdev = float(resp[5])
             self.short_mem_len = int(resp[6])
             self.pk_fnd_thr = int(resp[7])
+            self.dac_step = int(resp[8])
             
         except Exception as e:
             print(f'Failed to query arduino params {e}')
@@ -407,10 +409,11 @@ class ArduinoMonitor:
     
     def refresh_params(self, trigger_holdoff:int, samp_ct:int, dac_start:int, dac_min:int,
                        long_mem_n_stdev:float, short_mem_n_stdev:float, short_mem_len:int,
-                       pk_fnd_thr:int):
+                       pk_fnd_thr:int, dac_step:int):
         try:
             with serial_lock:
-                self.ser.write(f'R{trigger_holdoff},{samp_ct},{dac_start},{dac_min},{long_mem_n_stdev},{short_mem_n_stdev},{short_mem_len},{pk_fnd_thr}\n'.encode('ascii'))
+                self.ser.write((f'R{trigger_holdoff},{samp_ct},{dac_start},{dac_min},{long_mem_n_stdev},'
+                                f'{short_mem_n_stdev},{short_mem_len},{pk_fnd_thr},{dac_step}\n').encode('ascii'))
                 self.ser.flush()
                 resp = self.ser.readline()
             resp = resp.decode('ascii').rstrip().split(",")
@@ -425,6 +428,7 @@ class ArduinoMonitor:
             self.short_mem_n_stdev = short_mem_n_stdev
             self.short_mem_len = short_mem_len
             self.pk_fnd_thr = pk_fnd_thr
+            self.dac_step = dac_step
             
             return resp
         except Exception as e:
@@ -517,6 +521,7 @@ def init_arduino_params():
             "short memory N std thresh" : ard_mon.short_mem_n_stdev,
             "short memory length" : ard_mon.short_mem_len,
             "peakfind thresh" : ard_mon.pk_fnd_thr,
+            "dac step": ard_mon.dac_step,
             
         }
     except Exception as e:
@@ -535,6 +540,7 @@ def set_ard_params(params: dict = Body(...)):
                                params["short memory N std thresh"],
                                params["short memory length"],
                                params["peakfind thresh"],
+                               params["dac step"],
                                )
         return {"dac start status": int(resp[0]),
                 "dac min status": int(resp[1]),
