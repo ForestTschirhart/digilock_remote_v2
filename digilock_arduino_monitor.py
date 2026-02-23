@@ -23,14 +23,6 @@ Additionally, the two rci monitors and the arduino can be queried for scope trac
 
 """
 
-### vvv just a list of relevant commands from the digilock rci interface module vvv ###
-"""
-needs2werk = ['scope:ch2:rms', 'pid2:lock:state', 'pid1:input', 'pid1:output', 'pid1:lock:enable', 'pid1:setpoint', 'pid1:sign', 'pid1:slope']
-types = [           'num',     		'bool', 		'enum (str)',  'enum (str)',       'bool',             'num',		'bool',   	'bool']
-able =  [            'q',            'q',                'q,s',      'q,s',             'q,s',           'q,s', 		'q,s', 		'q,s']
-wouldBcool = ['scope:graph']
-"""
-
 # defualt init vars for the rms monitors
 
 RMS_THRESH_G = 100
@@ -595,9 +587,22 @@ def startup_event():
     # Create the DUIMonitor instances once at startup
     dui_blue = DUIMonitor('blue', "192.168.10.3", 60001, F_SAMP, WINDOW_LEN_B, RMS_THRESH_B)
     dui_green = DUIMonitor('green', "192.168.10.3", 60002, F_SAMP, WINDOW_LEN_G, RMS_THRESH_G)
-    ard_mon = ArduinoMonitor('/dev/ttyACM1', 250000, 8,
-                             MOD_EN_PIN, LOCK_STATE_PIN,
-                             MOD_ACTIVE_PIN, MOD_FAILURE_PIN, PEAKS_LOST_PIN) 
+    try:
+        ard_mon = ArduinoMonitor('/dev/ttyACM0', 250000, 8,
+                                 MOD_EN_PIN, LOCK_STATE_PIN,
+                                 MOD_ACTIVE_PIN, MOD_FAILURE_PIN, PEAKS_LOST_PIN)
+    except Exception as e1:
+        try:
+            print(f"Failed to connect to Arduino using port ttyACM0: {e1}")
+            print()
+            print("Trying ttyACM1...")
+            ard_mon = ArduinoMonitor('/dev/ttyACM1', 250000, 8,
+                                 MOD_EN_PIN, LOCK_STATE_PIN,
+                                 MOD_ACTIVE_PIN, MOD_FAILURE_PIN, PEAKS_LOST_PIN)
+        except Exception as e2:
+            
+            print()
+            print(f"Failed to connect to Arduino using port ttyACM1: {e2}")
     
     # Start their background monitor threads
     threading.Thread(target=dui_blue.simple_monitor_loop, daemon=True).start()
