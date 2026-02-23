@@ -48,7 +48,7 @@ class Digilock_UI:
 
     def query_numeric(self, command: str) -> float:
         line = self.query_lines(command)
-        if 'm' in line: # some of the DUIs use a.u. some return actual values with order of mag suffix
+        if 'm' in line: # some of the DUIs use arb units some return actual values with order of mag suffix
             mult = 1e-3
         elif 'u' in line:
             mult = 1e-6

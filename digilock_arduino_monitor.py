@@ -421,6 +421,8 @@ class ArduinoMonitor:
                 self.dac_start_val = dac_start # only change if ard said it was valid
             if int(resp[1]) == 1:
                 self.dac_min_val = dac_min
+            if int(resp[2]) == 1:
+                self.dac_step = dac_step
             
             self.trigger_holdoff = trigger_holdoff
             self.samp_ct = samp_ct
@@ -428,7 +430,6 @@ class ArduinoMonitor:
             self.short_mem_n_stdev = short_mem_n_stdev
             self.short_mem_len = short_mem_len
             self.pk_fnd_thr = pk_fnd_thr
-            self.dac_step = dac_step
             
             return resp
         except Exception as e:
@@ -454,12 +455,12 @@ class ArduinoMonitor:
             raise RuntimeError('Failed to init arduino stats') from e
         
         
-    def reset_feedback(self):
+    def reset_feedback(self, full:int):
         try:
             self.fbk_en = False # disable feedback, arduino manually does this but push to pin just in case
             self.push_flag(self.push_fbk_en_pin, self.fbk_en)
             with serial_lock:
-                self.ser.write(b'F\n')
+                self.ser.write(f'F{full}\n'.encode('ascii'))  # if 0 just resets failure flag, if 1 resets flag AND the output lvl
                 self.ser.flush()
             print(f"Reset Ard Feedback")
                 
@@ -482,9 +483,9 @@ def get_arduino_trace():
 
 
 @app.post("/reset_ard_fbk")
-def reset_ard_feedback():
+def reset_ard_feedback(setting: int = Body(...)):
     try:
-        ard_mon.reset_feedback()
+        ard_mon.reset_feedback(setting) # if 0 just resets failure flag, if 1 resets flag AND the output lvl
     except Exception as e:
         print(f"Arduino Feedback Reset Failed: {e}")
         raise HTTPException(status_code=500, detail=f"Arduino Feedback Reset Failed: {e}")
@@ -544,8 +545,11 @@ def set_ard_params(params: dict = Body(...)):
                                )
         return {"dac start status": int(resp[0]),
                 "dac min status": int(resp[1]),
-                "dac abs min": int(resp[2]),
-                "dac abs max": int(resp[3])}
+                "dac step status": int(resp[2]),
+                "dac abs min": int(resp[3]),
+                "dac abs max": int(resp[4]),
+                "dac abs max step": int(resp[5]),
+                }
     except Exception as e:
         print(f"Arduino Parameter Refresh Failed: {e}")
         raise HTTPException(status_code=500, detail=f"Arduino Parameter Refresh Failed: {e}")
@@ -591,7 +595,7 @@ def startup_event():
     # Create the DUIMonitor instances once at startup
     dui_blue = DUIMonitor('blue', "192.168.10.3", 60001, F_SAMP, WINDOW_LEN_B, RMS_THRESH_B)
     dui_green = DUIMonitor('green', "192.168.10.3", 60002, F_SAMP, WINDOW_LEN_G, RMS_THRESH_G)
-    ard_mon = ArduinoMonitor('/dev/ttyACM0', 250000, 4,
+    ard_mon = ArduinoMonitor('/dev/ttyACM1', 250000, 8,
                              MOD_EN_PIN, LOCK_STATE_PIN,
                              MOD_ACTIVE_PIN, MOD_FAILURE_PIN, PEAKS_LOST_PIN) 
     
