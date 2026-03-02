@@ -1,2 +1,1 @@
-from command import *
-from digilock_UI import *
+from .digilock_UI import Digilock_UI

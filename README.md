@@ -1,3 +1,9 @@
+# Credits
+This project is a modified version of:
+https://github.com/mugaltech/digilock_remote
+
+Major architectural and functional changes were made in 2026.
+
 # DigiLock Remote
 
 digilock_remote is a python package to communicate with Digilock 110 modules.
