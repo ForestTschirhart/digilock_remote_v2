@@ -28,18 +28,18 @@ See test_*.py for examples.
 clone and pip install from source.
 
 ```
-git clone https://github.com/benfre/digilock_remote.git digilock_remote
-cd digilock_remote
-pip install -e ./digilock_remote
+git clone https://github.com/ForestTschirhart/digilock_remote_v2.git
+cd digilock_remote_v2
+pip install -e .
 ```
 
-### build wheel
+### build wheel (untested)
 ```
-cd digilock_remote
+cd digilock_remote_v2
 python setup.py bdist_wheel
 ```
 
-### Credits
+## Credits
 This project is a modified version of:
 https://github.com/mugaltech/digilock_remote
 

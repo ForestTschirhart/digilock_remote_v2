@@ -5,6 +5,6 @@ setup(name='digilock_remote',
       description='Python tool for Digilock remote control (modified version)',
       author='Forest Tschirhart',
       author_email='foresttschirhart@gmail.com',
-      url='https://github.com/benfre/digilock_remote',
+      url='https://github.com/ForestTschirhart/digilock_remote_v2',
       packages=find_packages(),
      )
