@@ -22,6 +22,10 @@ Control of DigiLock 110 is done using property software. The "Digilock Module Se
 
 The default port for DMS is 60000 and for DUI is 60001. IP and ports is shown on "Digilock Module Server" panel.
 
+## Commandset
+
+For the full list of available commands see 
+
 ## Use of this package
 
 See test_*.py for examples.
