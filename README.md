@@ -1,12 +1,6 @@
-# Credits
-This project is a modified version of:
-https://github.com/mugaltech/digilock_remote
+# DigiLock Remote (v2)
 
-Major architectural and functional changes were made in 2026.
-
-# DigiLock Remote
-
-digilock_remote is a python package to communicate with Digilock 110 modules.
+digilock_remote_v2 is a python package to communicate with Digilock 110 modules.
 
 ## Digilock 110
 [DigiLock 110](https://www.toptica.com/products/tunable-diode-lasers/laser-locking-electronics/digilock-110-digital-locking/) Feedback Controlyzer is a signal processing and feedback electric module provided by Toptica. It can be used in laser driving racks or in a standalone module. 
@@ -18,13 +12,13 @@ Control of DigiLock 110 is done using property software. The "Digilock Module Se
 
 ![Digilock control](assets/Digilock_Control.jpg)
 
-### ports for connection
+## Ports for connection
 
 The default port for DMS is 60000 and for DUI is 60001. IP and ports is shown on "Digilock Module Server" panel.
 
 ## Commandset
 
-For the full list of available commands see 
+For the full list of available commands see DigiLock-RCI_Manual.pdf
 
 ## Use of this package
 
@@ -44,3 +38,9 @@ pip install -e ./digilock_remote
 cd digilock_remote
 python setup.py bdist_wheel
 ```
+
+### Credits
+This project is a modified version of:
+https://github.com/mugaltech/digilock_remote
+
+Major architectural and functional changes were made in 2026.
