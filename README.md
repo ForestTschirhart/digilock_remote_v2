@@ -34,9 +34,9 @@ pip install -e .
 ```
 
 make sure you have telnetlib installed before using.
-'''
+```
 pip install telnetlib3
-'''
+```
 
 ### build wheel (untested)
 ```
