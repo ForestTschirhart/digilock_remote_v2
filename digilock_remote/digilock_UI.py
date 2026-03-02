@@ -111,7 +111,9 @@ class Digilock_UI:
         self.send_comand(command+"={}".format(value))
     
     def set_bool(self, command: str, value: bool) -> None:
-        if bool:
+        if not isinstance(value, bool):
+            raise TypeError("value must be a bool")
+        if value:
             tf='true'
         else:
             tf='false'

@@ -22,7 +22,7 @@ For the full list of available commands see DigiLock-RCI_Manual.pdf
 
 ## Use of this package
 
-See test_*.py for examples.
+See example.py for examples.
 
 ### install from source
 clone and pip install from source.
@@ -32,6 +32,11 @@ git clone https://github.com/ForestTschirhart/digilock_remote_v2.git
 cd digilock_remote_v2
 pip install -e .
 ```
+
+make sure you have telnetlib installed before using.
+'''
+pip install telnetlib3
+'''
 
 ### build wheel (untested)
 ```
